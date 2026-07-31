@@ -671,72 +671,176 @@ DATA_DIR = '/rds/homes/[username]/data/'
 
 ## Output Files
 
-After running all notebooks:
+Running the complete pipeline
+generates the following files.
+All files are saved automatically
+by each notebook.
 
-data/
-├── X_cd_int.npy (215 × 991)
-├── X_uc_int.npy (430 × 991)
-├── labels_cd_consensus.npy (215,)
-├── labels_uc_consensus.npy (430,)
-├── labels_cd_gmm_best.npy (215,)
-├── labels_uc_gmm_best.npy (430,)
-├── consensus_matrix_cd.npy (215 × 215)
-├── consensus_matrix_uc.npy (430 × 430)
-├── latent_cd_dae_dec.npy (215 × 64)
-├── latent_uc_dae_dec.npy (430 × 128)
-├── stability_cd.npy (215,)
-├── stability_uc.npy (430,)
-├── meta_cd_final.csv
-├── meta_uc_final.csv
-├── ibdome_cd_preprocessed.csv (201 × 61)
-├── ibdome_uc_preprocessed.csv (132 × 61)
-├── ibdome_labels_dec_consensus.npy
-├── ibdome_uc_labels_dec_consensus.npy
-├── ibdome_latent_dae_dec.npy (201 × 16)
-├── ibdome_uc_latent_dae_dec.npy (132 × 16)
-├── ibdome_cd_validation_v2.json
-│ r=0.7346, delta=0.0144
-└── ibdome_uc_validation_v2.json
-r=0.6886, delta=0.0604
+---
 
-tables/
-├── cd_limma_M3.csv (991 × 7)
-├── uc_limma_M3.csv (991 × 7)
-├── cd_rf_importance.csv (991 × 2)
-├── uc_rf_importance.csv (991 × 2)
-├── ibdome_cd_de_v2.csv (61 × 8)
-├── ibdome_uc_de_v2.csv (61 × 8)
-├── ibdome_cd_rf_v2.csv (61 × 2)
-├── ibdome_uc_rf_v2.csv (61 × 2)
-├── ora_cd_C1_up_Hallmark.csv (32 pathways)
-├── ora_uc_C1_up_Hallmark.csv (31 pathways)
-├── ibdome_cd_ora_C2_up_Hallmark.csv
-├── ibdome_uc_ora_C2_up_Hallmark.csv
-├── dec_results_cd.csv (5 × 4)
-├── dec_results_uc.csv (5 × 4)
-├── ppi_CD_C1_top50.csv
-└── ppi_UC_C1_top50.csv
+### data/
 
-figures/
-├── figure1_overview.png
-├── figure2_clustering.png
-├── figure3_final.png
-├── figure4_final.png
-├── figure5_ppi_clean.png
-├── figS1_ukb_cd_clinical.png
-├── figS2_ukb_uc_clinical.png
-├── figS3_ibdome_cd_clinical.png
-├── figS4_ibdome_uc_clinical.png
-├── figS5_consensus_matrices.png
-├── figS6_rf_bubble.png
-├── figS7_roc_curves.png
-├── figS9_ora_full.png
-├── figS10_imputation.png
-├── figS12_stability.png
-├── figS13_dec_improvement.png
-└── figS14_loss_curves.png
+Core preprocessed matrices,
+cluster labels, latent
+representations, and metadata
+for all four cohorts.
 
+#### UK Biobank — Preprocessed Matrices
 
+| File | Shape | Description |
+|------|-------|-------------|
+| `X_cd_int.npy` | 215 × 991 | CD protein matrix after INT normalisation |
+| `X_uc_int.npy` | 430 × 991 | UC protein matrix after INT normalisation |
+| `meta_cd_final.csv` | 215 × 12 | CD patient metadata with cluster assignments |
+| `meta_uc_final.csv` | 430 × 12 | UC patient metadata with cluster assignments |
+
+#### UK Biobank — Cluster Labels
+
+| File | Shape | Description |
+|------|-------|-------------|
+| `labels_cd_consensus.npy` | (215,) | Final consensus cluster labels CD |
+| `labels_uc_consensus.npy` | (430,) | Final consensus cluster labels UC |
+| `labels_cd_gmm_best.npy` | (215,) | Independent GMM labels for ARI validation CD (ARI = 0.963) |
+| `labels_uc_gmm_best.npy` | (430,) | Independent GMM labels for ARI validation UC (ARI = 0.972) |
+
+#### UK Biobank — Consensus Matrices
+
+| File | Shape | Description |
+|------|-------|-------------|
+| `consensus_matrix_cd.npy` | 215 × 215 | Silhouette-weighted co-occurrence matrix CD |
+| `consensus_matrix_uc.npy` | 430 × 430 | Silhouette-weighted co-occurrence matrix UC |
+
+#### UK Biobank — Latent Representations
+
+| File | Shape | Description |
+|------|-------|-------------|
+| `latent_cd_dae_dec.npy` | 215 × 64 | DAE-DEC optimised latent space CD |
+| `latent_uc_dae_dec.npy` | 430 × 128 | DAE-DEC optimised latent space UC |
+
+#### UK Biobank — Stability
+
+| File | Shape | Description |
+|------|-------|-------------|
+| `stability_cd.npy` | (215,) | Per-patient stability scores CD (mean = 0.893, unstable = 0) |
+| `stability_uc.npy` | (430,) | Per-patient stability scores UC (mean = 0.844, unstable = 0) |
+
+#### IBDome — Preprocessed Data
+
+| File | Shape | Description |
+|------|-------|-------------|
+| `ibdome_cd_preprocessed.csv` | 201 × 61 | IBDome CD protein matrix after QC |
+| `ibdome_uc_preprocessed.csv` | 132 × 61 | IBDome UC protein matrix after QC |
+| `ibdome_cd_final_v2.csv` | 201 × 115 | IBDome CD metadata with cluster assignments |
+| `ibdome_uc_final_v2.csv` | 132 × 115 | IBDome UC metadata with cluster assignments |
+
+#### IBDome — Cluster Labels
+
+| File | Shape | Description |
+|------|-------|-------------|
+| `ibdome_labels_dec_consensus.npy` | (201,) | IBDome CD consensus labels |
+| `ibdome_uc_labels_dec_consensus.npy` | (132,) | IBDome UC consensus labels |
+| `ibdome_consensus_dec.npy` | 201 × 201 | IBDome CD co-occurrence matrix |
+| `ibdome_uc_consensus_dec.npy` | 132 × 132 | IBDome UC co-occurrence matrix |
+
+#### IBDome — Latent Representations
+
+| File | Shape | Description |
+|------|-------|-------------|
+| `ibdome_latent_dae_dec.npy` | 201 × 16 | IBDome CD DAE-DEC latent space |
+| `ibdome_uc_latent_dae_dec.npy` | 132 × 16 | IBDome UC DAE-DEC latent space |
+
+#### IBDome — Validation Results
+
+| File | Key Results | Description |
+|------|-------------|-------------|
+| `ibdome_cd_validation_v2.json` | r = 0.7346, Δ = 0.0144 | IBDome CD chemokine-vascular validation |
+| `ibdome_uc_validation_v2.json` | r = 0.6886, Δ = 0.0604 | IBDome UC chemokine-vascular validation |
+
+---
+
+### tables/
+
+All differential abundance,
+Random Forest, pathway enrichment,
+and DEC improvement results.
+
+#### Differential Abundance
+
+| File | Shape | Description |
+|------|-------|-------------|
+| `cd_limma_M3.csv` | 991 × 7 | UKB CD limma Model 3 results. Columns: logFC, AveExpr, t, P.Value, adj.P.Val, B, protein. Top: DBI logFC = −1.34, FDR = 2.12×10⁻³⁴ |
+| `uc_limma_M3.csv` | 991 × 7 | UKB UC limma Model 3 results. Top: TBCB logFC = −1.74, FDR = 2.63×10⁻⁷³ |
+| `ibdome_cd_de_v2.csv` | 61 × 8 | IBDome CD Welch t-test results. 58/61 significant. Top: HGF logFC = +1.33, FDR = 3.86×10⁻²¹ |
+| `ibdome_uc_de_v2.csv` | 61 × 8 | IBDome UC Welch t-test results. 53/61 significant. Top: MMP-10 logFC = +1.25, FDR = 1.28×10⁻¹³ |
+
+#### Random Forest Importance
+
+| File | Shape | Description |
+|------|-------|-------------|
+| `cd_rf_importance.csv` | 991 × 2 | UKB CD Gini importance scores. Columns: protein, gini_imp. AUC = 0.983 ± 0.014 |
+| `uc_rf_importance.csv` | 991 × 2 | UKB UC Gini importance scores. AUC = 0.985 ± 0.003 |
+| `ibdome_cd_rf_v2.csv` | 61 × 2 | IBDome CD RF importance. AUC = 0.992 ± 0.006 |
+| `ibdome_uc_rf_v2.csv` | 61 × 2 | IBDome UC RF importance. AUC = 0.998 ± 0.003 |
+
+#### Pathway Enrichment (ORA)
+
+| File | Pathways | Description |
+|------|----------|-------------|
+| `ora_cd_C1_up_Hallmark.csv` | 32 significant | UKB CD Hallmark ORA. Top: EMT FDR = 9.50×10⁻²¹ |
+| `ora_uc_C1_up_Hallmark.csv` | 31 significant | UKB UC Hallmark ORA. Top: Allograft Rejection FDR = 3.36×10⁻²⁰ |
+| `ibdome_cd_ora_C2_up_Hallmark.csv` | 10 significant | IBDome CD ORA. Top: TNFα/NFκB FDR = 1.32×10⁻¹⁰ |
+| `ibdome_uc_ora_C2_up_Hallmark.csv` | 10 significant | IBDome UC ORA. Top: TNFα/NFκB FDR = 4.01×10⁻¹¹ |
+
+#### DEC Improvement
+
+| File | Shape | Description |
+|------|-------|-------------|
+| `dec_results_cd.csv` | 5 × 4 | CD silhouette before/after DEC for all 5 architectures. Columns: model, sil_before, sil_after, gain |
+| `dec_results_uc.csv` | 5 × 4 | UC silhouette before/after DEC. Max gain: +0.580 (Standard AE) |
+
+#### PPI Networks
+
+| File | Description |
+|------|-------------|
+| `ppi_CD_C1_top50.csv` | UKB CD top 50 hub proteins with degree and betweenness centrality |
+| `ppi_UC_C1_top50.csv` | UKB UC top 50 hub proteins. Top hub: SRC kinase (degree = 17, BC = 0.605) |
+| `ibdome_cd_ppi_C2_top30.csv` | IBDome CD top 30 hubs. Top: IL-6, IL-10 (degree = 26) |
+| `ibdome_uc_ppi_C2_top30.csv` | IBDome UC top 30 hubs |
+
+---
+
+### figures/
+
+All figures generated by
+`Figures.ipynb` and
+`Supplementary_figures.ipynb`.
+
+#### Main Figures
+
+| File | Figure | Description |
+|------|--------|-------------|
+| `figure1_overview.png` | Figure 1 | Study design and preprocessing pipeline |
+| `figure2_clustering.png` | Figure 2 | Ensemble pipeline architecture and consensus results |
+| `figure3_final.png` | Figure 3 | UMAP visualisation all four cohorts |
+| `figure4_final.png` | Figure 4 | Pathway enrichment and volcano plots |
+| `figure5_ppi_clean.png` | Figure 5 | PPI networks hyperinflammatory subtype |
+
+#### Supplementary Figures
+
+| File | Figure | Description |
+|------|--------|-------------|
+| `figS1_ukb_cd_clinical.png` | S1 | Clinical characteristics UKB CD (n = 215) |
+| `figS2_ukb_uc_clinical.png` | S2 | Clinical characteristics UKB UC (n = 430) |
+| `figS3_ibdome_cd_clinical.png` | S3 | Clinical characteristics IBDome CD (n = 201) |
+| `figS4_ibdome_uc_clinical.png` | S4 | Clinical characteristics IBDome UC (n = 132) |
+| `figS5_consensus_matrices.png` | S5 | All four consensus co-occurrence matrices |
+| `figS6_rf_bubble.png` | S6 | RF importance vs differential abundance bubble charts |
+| `figS7_roc_curves.png` | S7 | ROC curves all cohorts AUC 0.983–0.998 |
+| `figS9_ora_full.png` | S8 | Complete Hallmark pathway enrichment 83 pathways |
+| `figS10_imputation.png` | S9 | Imputation quality assessment KS statistics |
+| `figS12_stability.png` | S10 | Per-patient stability distributions |
+| `figS13_dec_improvement.png` | S11 | DEC silhouette improvement all architectures |
+| `figS14_loss_curves.png` | S12 | Autoencoder training and validation loss curves |
 ---
 
 ## Troubleshooting
